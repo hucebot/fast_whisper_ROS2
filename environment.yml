@@ -1,0 +1,12 @@
+name: eurobin-whisper
+channels:
+  - defaults
+  - nvidia
+dependencies:
+  - cudatoolkit=11.7.0
+  - cudnn=8.9.2
+  - libcublas=12.4.5
+  - pip
+  - pip:
+    - sounddevice==0.4.7
+    - faster-whisper==1.0.2
