@@ -2,67 +2,6 @@
 
 ## Testing
 
-### Environment setup
-
-You'll need `sounddevice` and `faster-whisper` which are installable via `pip`, and so could be installed in a simple venv.
-However, you'll also need `cudatoolkit`, `cudnn` and `libcublas`.
-
-If these NVIDIA dependencies are not installed on your computer, the fastest and easiest way to test the script is to use `conda` with the provided environment file: `conda env create -f environment.yml`
-
-:warning: this section is a little old, and the script now also use `rclpy` which is not in the environment.
-We should split the whisper_online_mic.py into a base script, a script to directly test from the microphone, and a script with the ROS node.
-
-### Script
-
-```
-usage: whisper_online_mic.py [-h]
-                             [--model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium,large-v1,large-v2,large-v3,large}]
-                             [--model_cache_dir MODEL_CACHE_DIR]
-                             [--model_dir MODEL_DIR] [--lang LANG]
-                             [--buffer_trimming_sec BUFFER_TRIMMING_SEC]
-                             [--microphone_blocksize_sec MICROPHONE_BLOCKSIZE_SEC]
-                             [--microphone_source MICROPHONE_SOURCE]
-                             [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                             [--ros-topic ROS_TOPIC]
-                             [--max-void-count MAX_VOID_COUNT]
-
-options:
-  -h, --help            show this help message and exit
-  --model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium,large-v1,large-v2,large-v3,large}
-                        Name size of the Whisper model to use (default:
-                        large-v2). The model is automatically downloaded from
-                        the model hub if not present in model cache dir.
-  --model_cache_dir MODEL_CACHE_DIR
-                        Overriding the default model cache dir where models
-                        downloaded from the hub are saved
-  --model_dir MODEL_DIR
-                        Dir where Whisper model.bin and other files are saved.
-                        This option overrides --model and --model_cache_dir
-                        parameter.
-  --lang LANG, --language LANG
-                        Source language code, e.g. en,de,cs, or 'auto' for
-                        language detection.
-  --buffer_trimming_sec BUFFER_TRIMMING_SEC
-                        Buffer trimming length threshold in seconds. If buffer
-                        length is longer, trimming sentence/segment is
-                        triggered.
-  --microphone_blocksize_sec MICROPHONE_BLOCKSIZE_SEC
-                        Size of the audio block, default to 10ms.
-  --microphone_source MICROPHONE_SOURCE
-                        Device name to use.
-  -l {DEBUG,INFO,WARN,ERROR,FATAL}, --log-level {DEBUG,INFO,WARN,ERROR,FATAL}
-                        Set the log level
-  --ros-topic ROS_TOPIC
-                        ROS topic on with publish recognized sentences.
-  --max-void-count MAX_VOID_COUNT
-                        Maximum number of consecutive void recognition before
-                        sending the sentence buffer.
-  --translate
-                        Explicity activate the translation to the target language (defined by --lang).
-```
-
-You can discover the device name of your microphone using `sounddevice.query_devices()`.
-
 ## Docker
 
 We provide a `Dockerfile` based on `rclpy:iron` which:
@@ -100,3 +39,74 @@ docker run --rm --runtime=nvidia --gpus=all --network=host --device=/dev/snd:/de
 ```
 
 
+
+
+### Script
+
+```
+usage: whisper_online_mic.py [-h]
+                             [--model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium,large-v1,large-v2,large-v3,large}]
+                             [--model_cache_dir MODEL_CACHE_DIR]
+                             [--model_dir MODEL_DIR] [--lang LANG]
+                             [--buffer_trimming_sec BUFFER_TRIMMING_SEC]
+                             [--microphone_blocksize_sec MICROPHONE_BLOCKSIZE_SEC]
+                             [--microphone_source MICROPHONE_SOURCE]
+                             [-l {DEBUG,INFO,WARN,ERROR,FATAL}]
+                             [--ros-topic ROS_TOPIC]
+                             [--max-void-count MAX_VOID_COUNT] [--translate]
+
+options:
+  -h, --help            show this help message and exit
+  --model {tiny.en,tiny,base.en,base,small.en,small,medium.en,medium,large-v1,large-v2,large-v3,large}
+                        Name size of the Whisper model to use (default:
+                        large-v2). The model is automatically downloaded from
+                        the model hub if not present in model cache dir.
+  --model_cache_dir MODEL_CACHE_DIR
+                        Overriding the default model cache dir where models
+                        downloaded from the hub are saved
+  --model_dir MODEL_DIR
+                        Dir where Whisper model.bin and other files are saved.
+                        This option overrides --model and --model_cache_dir
+                        parameter.
+  --lang LANG, --language LANG
+                        Source language code, e.g. en,de,cs, or 'auto' for
+                        language detection.
+  --buffer_trimming_sec BUFFER_TRIMMING_SEC
+                        Buffer trimming length threshold in seconds. If buffer
+                        length is longer, trimming sentence/segment is
+                        triggered.
+  --microphone_blocksize_sec MICROPHONE_BLOCKSIZE_SEC
+                        Size of the audio block, default to 10ms.
+  --microphone_source MICROPHONE_SOURCE
+                        Device name to use.
+  -l {DEBUG,INFO,WARN,ERROR,FATAL}, --log-level {DEBUG,INFO,WARN,ERROR,FATAL}
+                        Set the log level
+  --ros-topic ROS_TOPIC
+                        ROS topic on with publish recognized sentences.
+  --max-void-count MAX_VOID_COUNT
+                        Maximum number of consecutive void recognition before
+                        sending the sentence buffer.
+  --translate           Explicity activate the translation to the target
+                        language (defined by --lang).
+```
+
+### Acknowledgements
+
+This work is more or less a ros2 wrapper of [whisper_streaming](https://github.com/ufal/whisper_streaming), in case you use this repo please cite [their work](https://aclanthology.org/2023.ijcnlp-demo.3/):
+```bibtex
+@inproceedings{machacek-etal-2023-turning,
+    title = "Turning Whisper into Real-Time Transcription System",
+    author = "Mach{\'a}{\v{c}}ek, Dominik  and
+      Dabre, Raj  and
+      Bojar, Ond{\v{r}}ej",
+    editor = "Saha, Sriparna  and
+      Sujaini, Herry",
+    booktitle = "Proceedings of the 13th International Joint Conference on Natural Language Processing and the 3rd Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics: System Demonstrations",
+    month = nov,
+    year = "2023",
+    address = "Bali, Indonesia",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2023.ijcnlp-demo.3",
+    pages = "17--24",
+}
+```
