@@ -92,7 +92,7 @@ options:
 
 ### Acknowledgements
 
-This work is more or less a ros2 wrapper of [whisper_streaming](https://github.com/ufal/whisper_streaming), in case you use this repo please cite [their work](https://aclanthology.org/2023.ijcnlp-demo.3/):
+This work is more or less a ros2 publisher of [whisper_streaming](https://github.com/ufal/whisper_streaming), in case you use this repo please cite [their work](https://aclanthology.org/2023.ijcnlp-demo.3/):
 ```bibtex
 @inproceedings{machacek-etal-2023-turning,
     title = "Turning Whisper into Real-Time Transcription System",
