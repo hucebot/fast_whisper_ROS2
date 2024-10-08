@@ -1,5 +1,11 @@
 # Speech Recognition with Online Whisper
 
+## Project Overview
+
+This project integrates the Faster Whisper ASR (Automatic Speech Recognition) model with ROS 2 to transcribe audio in real-time from a microphone. It leverages faster-whisper, which provides fast and efficient ASR processing, utilizing GPU acceleration where available. The recognized text is then published as a ROS message on a specified topic.
+
+The application is designed for both transcription and optional translation of audio streams, and can be configured for different Whisper model sizes.
+
 ## Testing
 
 ## Docker
